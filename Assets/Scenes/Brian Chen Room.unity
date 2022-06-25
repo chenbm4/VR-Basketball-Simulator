@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 256181622}
   - component: {fileID: 256181621}
   - component: {fileID: 256181620}
+  - component: {fileID: 256181626}
   m_Layer: 0
   m_Name: Basketball
   m_TagString: Untagged
@@ -363,7 +364,7 @@ MonoBehaviour:
       m_Calls: []
   m_AttachTransform: {fileID: 0}
   m_AttachEaseInTime: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
@@ -377,41 +378,32 @@ MonoBehaviour:
   m_SmoothRotationAmount: 5
   m_TightenRotation: 0.5
   m_ThrowOnDetach: 1
-  m_ThrowSmoothingDuration: 0.15
+  m_ThrowSmoothingDuration: 0
   m_ThrowSmoothingCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.004500887
-      outSlope: 0.004500887
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
+      outWeight: 0
     - serializedVersion: 3
-      time: 0.9682655
-      value: 1.004358
-      inSlope: 0.037825108
-      outSlope: 0.037825108
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.74855745
-    - serializedVersion: 3
-      time: 0.9993369
-      value: 0.0004911423
-      inSlope: -32.308365
-      outSlope: -32.308365
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_ThrowVelocityScale: 1.8
+  m_ThrowVelocityScale: 1
   m_ThrowAngularVelocityScale: 1
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
@@ -510,6 +502,22 @@ Transform:
   m_Father: {fileID: 732940325}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &256181626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256181619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e73106e0e85a94095fd76352635e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootingZone: {fileID: 0}
+  basketball: {fileID: 0}
+  basketballGrabInteractable: {fileID: 256181620}
+  hand: {fileID: 712900743}
 --- !u!4 &337053077 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2257705481687827567, guid: d091eaa5483c6f84082ac222e0527a18,
@@ -2709,7 +2717,7 @@ MonoBehaviour:
   m_OnSelectExited:
     m_PersistentCalls:
       m_Calls: []
-  m_SelectActionTrigger: 0
+  m_SelectActionTrigger: 2
   m_HideControllerOnSelect: 1
   m_AllowHoveredActivate: 0
   m_PlayAudioClipOnSelectEntered: 0
@@ -3176,8 +3184,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6377935, y: 0.5493307, z: 0.85941935}
-  m_Center: {x: 0.030696452, y: 0.16828847, z: 0.35309425}
+  m_Size: {x: 1, y: 0.66, z: 1.42}
+  m_Center: {x: 0, y: 0.36, z: 0.83}
 --- !u!1 &1168762211
 GameObject:
   m_ObjectHideFlags: 0
