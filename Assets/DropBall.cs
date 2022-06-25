@@ -26,7 +26,7 @@ public class DropBall : MonoBehaviour
     {
         if (basketballGrabInteractable.isSelected && other.gameObject.name == "Main Camera")
         {
-            Debug.Log($"{OVRInput.GetLocalControllerAcceleration((OVRInput.Controller.RTouch))}");
+            //Debug.Log($"{OVRInput.GetLocalControllerAcceleration((OVRInput.Controller.RTouch))}");
             //Debug.Log("Drop Ball");
             //hand.allowSelect = false;
         }
