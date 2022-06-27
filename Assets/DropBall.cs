@@ -44,10 +44,12 @@ public class DropBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (shoot)
         {
             //basketballRb.position = ballPosition;
-            basketballRb.velocity = shootVelocity;
+            //basketballRb.velocity = shootVelocity;
+            basketballRb.AddForce(shootVelocity, ForceMode.VelocityChange);
             shootVelocity *= 0;
 
             positions.Clear();
@@ -64,7 +66,7 @@ public class DropBall : MonoBehaviour
         if (startTracking)
         {
             //Vector3 controllerVelocity = velocityCalculator.GetControllerVelocity();
-            Vector3 controllerPosition = UnityEngine.InputSystem.XR.XRController.rightHand.devicePosition.ReadValue();
+            Vector3 controllerPosition = controllerTransform.position;
 
             //transform.TransformPoint(controllerPosition);
             //Vector3 controllerPosition = velocityCalculator.GetControllerPosition();
@@ -138,30 +140,31 @@ public class DropBall : MonoBehaviour
         int count = 1;
         foreach (var position in positions)
         {
-            Vector3 worldPos = hand.transform.TransformPoint(position);
             if (first)
             {
-                lastPosition = worldPos;
                 first = false;
             }
             else
             {
-                if (lastPosition == worldPos)
+                if (lastPosition == position)
                 {
                     count++;
                 }
                 else
                 {
-                    var velocity = (worldPos - lastPosition) / (count * Time.fixedDeltaTime);
+                    var velocity = (position - lastPosition) / (count * Time.fixedDeltaTime);
                     count = 1;
                     velocities.Add(velocity);
                 
-                    if (velocity.magnitude > maxMagnitude)
+                    if (velocity.sqrMagnitude > maxMagnitude)
                     {
+                        maxMagnitude = velocity.sqrMagnitude;
                         shootVelocity = velocity;
                     }
                 }
             }
+
+            lastPosition = position;
         }
 
         //shootVelocity.z = velocities.Average();
