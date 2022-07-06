@@ -277,6 +277,7 @@ GameObject:
   - component: {fileID: 256181621}
   - component: {fileID: 256181620}
   - component: {fileID: 256181626}
+  - component: {fileID: 256181627}
   m_Layer: 0
   m_Name: Basketball
   m_TagString: Untagged
@@ -530,6 +531,20 @@ MonoBehaviour:
   hand: {fileID: 712900743}
   velocityMultiplier: 1
   controllerTransform: {fileID: 712900737}
+--- !u!114 &256181627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256181619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55763840ed9d8b49ba14ea487ecd8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootingTrigger: {fileID: 712900745}
+  shootingZone: {fileID: 1325226600}
 --- !u!4 &337053077 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2257705481687827567, guid: d091eaa5483c6f84082ac222e0527a18,
@@ -3256,6 +3271,7 @@ GameObject:
   - component: {fileID: 712900743}
   - component: {fileID: 712900742}
   - component: {fileID: 712900744}
+  - component: {fileID: 712900745}
   m_Layer: 0
   m_Name: RightHand Controller
   m_TagString: Untagged
@@ -3563,6 +3579,19 @@ MonoBehaviour:
   currentPosition: {x: 0, y: 0, z: 0}
   currentVelocity: {x: 0, y: 0, z: 0}
   debugEnabled: 0
+--- !u!114 &712900745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712900736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec2c3ff78d6d2a44a3949f328474ef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootingZone: {fileID: 1325226600}
 --- !u!1 &732940324
 GameObject:
   m_ObjectHideFlags: 0

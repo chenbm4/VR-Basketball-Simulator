@@ -1,52 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ControllerMetrics : MonoBehaviour
 {
     // current metrics (public for accessibility in other classes)
     //  position coordinates are world, not local
+    public InputActionProperty positionAction;
     public Vector3 currentPosition;
-    //public Quaternion currentRotation;
+    public Quaternion currentRotation;
     public Vector3 currentVelocity;
+    public float currentVelSqrMagnitude;
     //public Vector3 currentAngularVelocity;
+    public Vector3 currentAcceleration;
+    public float currentMagAcceleration;
 
     // last usage metrics (for velocity calculations)
     private Vector3 lastPosition;
     //private Quaternion lastRotation;
+    private Vector3 lastVelocity;
+    private float lastVelocitySqrMagnitude;
 
     // transform data of the controller
     private Transform controllerTransform;
 
     private float currentTime;
     private float lastTime;
-    private int debugCounter = 0;
+
+    private List<Vector3> positionsList;
+    private List<Vector3> velocitiesList;
 
     public bool debugEnabled;
+    private bool trackingActive;
 
     // Start is called before the first frame update
     void Start()
     {
         controllerTransform = GetComponent<Transform>();
-        currentPosition = lastPosition = controllerTransform.position;
+        lastPosition = controllerTransform.position;
+        lastVelocity = Vector3.zero;
+        lastVelocitySqrMagnitude = 0.0f;
+
         lastTime = Time.realtimeSinceStartup;
+
+        positionsList = null;
+        velocitiesList = null;
+        //accelerationsList = null;
+
+        trackingActive = false;
     }
 
     /// <summary>
     /// See <see cref="MonoBehaviour"/>.
     /// </summary>
-    protected virtual void OnEnable()
-    {
-        Application.onBeforeRender += OnBeforeRender;
-    }
+    //protected virtual void OnEnable()
+    //{
+    //    Application.onBeforeRender += OnBeforeRender;
+    //}
 
-    /// <summary>
-    /// See <see cref="MonoBehaviour"/>.
-    /// </summary>
-    protected virtual void OnDisable()
-    {
-        Application.onBeforeRender -= OnBeforeRender;
-    }
+    ///// <summary>
+    ///// See <see cref="MonoBehaviour"/>.
+    ///// </summary>
+    //protected virtual void OnDisable()
+    //{
+    //    Application.onBeforeRender -= OnBeforeRender;
+    //}
 
     // Update is called once per frame
     void Update()
@@ -73,33 +92,54 @@ public class ControllerMetrics : MonoBehaviour
     // UpdateMetrics gets current metrics and calculates velocities accordingly
     void UpdateMetrics()
     {
+        currentTime = Time.realtimeSinceStartup;
         // get current metrics
         currentPosition = controllerTransform.position;
-        currentTime = Time.realtimeSinceStartup;
+        currentRotation = controllerTransform.localRotation;
+        if (trackingActive)
+        {
+            positionsList.Add(currentPosition);
+        }
 
-        // calculate velocity
+        // calculate velocities and acceleration
         var timeDelta = currentTime - lastTime;
         if (timeDelta != 0)
         {
-
             currentVelocity = (currentPosition - lastPosition) / (timeDelta);
+            currentVelSqrMagnitude = currentVelocity.sqrMagnitude;
+            currentAcceleration = (currentVelocity - lastVelocity) / (timeDelta);
+            currentMagAcceleration = (currentVelSqrMagnitude - lastVelocitySqrMagnitude) / (timeDelta);
+            if (trackingActive)
+            {
+                velocitiesList.Add(currentVelocity);
+                //accelerationsList.Add(currentAcceleration);
+            }
 
             // if debug enabled, output data to debug
             if (debugEnabled)
             {
-                // every 1 position changes, print debug
-                if (debugCounter == 1)
-                {
-                    Debug.Log(OutputDebug());
-                    debugCounter = 0;
-                }
-                debugCounter++;
+                Debug.Log(OutputDebug());
             }
 
             // reset last datapoints
             lastPosition = currentPosition;
             lastTime = currentTime;
+            lastVelocity = currentVelocity;
+            lastVelocitySqrMagnitude = currentVelSqrMagnitude;
         }
+    }
+
+    // adds datapoints to given lists when tracking started
+    public void StartTracking(ref List<Vector3> positions, ref List<Vector3> velocities)
+    {
+        trackingActive = true;
+        positionsList = positions;
+        velocitiesList = velocities;
+    }
+
+    public void StopTracking()
+    {
+        trackingActive = false;
     }
 
     string OutputDebug()
@@ -108,7 +148,11 @@ public class ControllerMetrics : MonoBehaviour
             $"Last Position Change Time: {lastTime}; \n" +
             $"Current Position: {currentPosition}; \n" +
             $"Last Position: {lastPosition}; \n" +
+            $"Current Position: {currentRotation}; \n" +
             $"Current Velocity: {currentVelocity}; \n" +
+            $"Last Velocity: {lastVelocity}; \n" +
+            $"Current Acceleration: {currentAcceleration}; \n" +
+            $"Current Magnitude Acceleration: {currentMagAcceleration}; \n" +
             $"Time Delta: {currentTime - lastTime}");
 
         return output;
