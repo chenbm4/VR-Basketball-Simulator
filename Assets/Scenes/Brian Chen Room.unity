@@ -3576,8 +3576,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab948ffa38a8c241a064241ac471a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  positionAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Position
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 07d087ee-c7c2-46bc-9462-2ec0349c302a
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
   currentPosition: {x: 0, y: 0, z: 0}
+  currentRotation: {x: 0, y: 0, z: 0, w: 0}
   currentVelocity: {x: 0, y: 0, z: 0}
+  currentVelSqrMagnitude: 0
+  currentAcceleration: {x: 0, y: 0, z: 0}
+  currentMagAcceleration: 0
   debugEnabled: 0
 --- !u!114 &712900745
 MonoBehaviour:

@@ -7,18 +7,19 @@ public class ControllerMetrics : MonoBehaviour
 {
     // current metrics (public for accessibility in other classes)
     //  position coordinates are world, not local
-    public InputActionProperty positionAction;
     public Vector3 currentPosition;
     public Quaternion currentRotation;
     public Vector3 currentVelocity;
+    public Vector3 currentAngVelocity;
     public float currentVelSqrMagnitude;
+    public float currentAngVelSqrMagnitude;
     //public Vector3 currentAngularVelocity;
     public Vector3 currentAcceleration;
     public float currentMagAcceleration;
 
     // last usage metrics (for velocity calculations)
     private Vector3 lastPosition;
-    //private Quaternion lastRotation;
+    private Quaternion lastRotation;
     private Vector3 lastVelocity;
     private float lastVelocitySqrMagnitude;
 
@@ -39,6 +40,7 @@ public class ControllerMetrics : MonoBehaviour
     {
         controllerTransform = GetComponent<Transform>();
         lastPosition = controllerTransform.position;
+        lastRotation = controllerTransform.localRotation;
         lastVelocity = Vector3.zero;
         lastVelocitySqrMagnitude = 0.0f;
 
@@ -70,24 +72,24 @@ public class ControllerMetrics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (debugEnabled)
-        {
-            Debug.Log("Update");
-        }
+        //if (debugEnabled)
+        //{
+        //    Debug.Log("Update");
+        //}
 
         UpdateMetrics();
     }
 
     // Controller position updates before render, so get this data
-    void OnBeforeRender()
-    {
-        if (debugEnabled)
-        {
-            Debug.Log("OnPreRender");
-        }
+    //void OnBeforeRender()
+    //{
+    //    if (debugEnabled)
+    //    {
+    //        Debug.Log("OnPreRender");
+    //    }
 
-        UpdateMetrics();
-    }
+    //    UpdateMetrics();
+    //}
 
     // UpdateMetrics gets current metrics and calculates velocities accordingly
     void UpdateMetrics()
@@ -106,7 +108,11 @@ public class ControllerMetrics : MonoBehaviour
         if (timeDelta != 0)
         {
             currentVelocity = (currentPosition - lastPosition) / (timeDelta);
+            Quaternion rotationDelta = currentRotation * Quaternion.Inverse(lastRotation);
+            var eulerRotation = new Vector3(Mathf.DeltaAngle(0, rotationDelta.eulerAngles.x), Mathf.DeltaAngle(0, rotationDelta.eulerAngles.y), Mathf.DeltaAngle(0, rotationDelta.eulerAngles.z));
+            currentAngVelocity = eulerRotation / (timeDelta);
             currentVelSqrMagnitude = currentVelocity.sqrMagnitude;
+            currentAngVelSqrMagnitude = currentAngVelocity.sqrMagnitude;
             currentAcceleration = (currentVelocity - lastVelocity) / (timeDelta);
             currentMagAcceleration = (currentVelSqrMagnitude - lastVelocitySqrMagnitude) / (timeDelta);
             if (trackingActive)
@@ -123,6 +129,7 @@ public class ControllerMetrics : MonoBehaviour
 
             // reset last datapoints
             lastPosition = currentPosition;
+            lastRotation = currentRotation;
             lastTime = currentTime;
             lastVelocity = currentVelocity;
             lastVelocitySqrMagnitude = currentVelSqrMagnitude;
@@ -148,9 +155,11 @@ public class ControllerMetrics : MonoBehaviour
             $"Last Position Change Time: {lastTime}; \n" +
             $"Current Position: {currentPosition}; \n" +
             $"Last Position: {lastPosition}; \n" +
-            $"Current Position: {currentRotation}; \n" +
+            $"Current Rotation: {currentRotation}; \n" +
             $"Current Velocity: {currentVelocity}; \n" +
             $"Last Velocity: {lastVelocity}; \n" +
+            $"Current Angular Velocity: {currentAngVelocity}; \n" +
+            $"Current Angular Velocity Magnitude: {currentAngVelSqrMagnitude}; \n" +
             $"Current Acceleration: {currentAcceleration}; \n" +
             $"Current Magnitude Acceleration: {currentMagAcceleration}; \n" +
             $"Time Delta: {currentTime - lastTime}");
