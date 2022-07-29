@@ -12,11 +12,13 @@ public class ShootingTrigger : MonoBehaviour
     private bool trackingActive;
     private List<Vector3> positions;
     private List<Vector3> velocities;
+    private List<float> accelerationMags;
 
     private ControllerMetrics metrics;
 
     private Vector3 shootVelocity;
     private bool shoot;
+    private bool releaseStarted;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,9 @@ public class ShootingTrigger : MonoBehaviour
         trackingActive = false;
         positions = new List<Vector3>();
         velocities = new List<Vector3>();
+        accelerationMags = new List<float>();
+        shoot = false;
+        releaseStarted = false;
 
         metrics = GetComponent<ControllerMetrics>();
     }
@@ -31,23 +36,62 @@ public class ShootingTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<XRDirectInteractor>().allowSelect = true;
-        if (trackingActive)
-        {
-            positions.Add(metrics.currentPosition);
-            velocities.Add(metrics.currentVelocity);
-            if (metrics.currentAngVelocity.x > 400)
-            {
-                Shoot();
-            }
-        }
-
         if (shoot)
         {
             ballRb.AddForce(shootVelocity, ForceMode.VelocityChange);
             shootVelocity *= 0;
+            StopTracking();
+        }
+        
+        if (trackingActive)
+        {
+            //positions.Add(metrics.currentPosition);
+            //velocities.Add(metrics.currentVelocity);
+            //accelerationMags.Add(metrics.currentMagAcceleration);
+            
+            if (!releaseStarted && metrics.currentMagAcceleration > 500.0f)
+            {
+                releaseStarted = true;
+                Debug.Log("Release started.");
+            }
 
-            shoot = false;
+            if (releaseStarted)
+            {
+                positions.Add(metrics.currentPosition);
+                velocities.Add(metrics.currentVelocity);
+                accelerationMags.Add(metrics.currentMagAcceleration);
+
+                if (metrics.currentVelSqrMagnitude < 5.0f)
+                {
+                    int maxVelocityIndex = 0;
+                    int indexCounter = 0;
+                    int shotAcceleratingCounter = 0;
+
+                    foreach (float acceleration in accelerationMags)
+                    {
+                        if (acceleration > 0.0f)
+                        {
+                            shotAcceleratingCounter++;
+                        }
+                        else if (shotAcceleratingCounter >= 2)
+                        {
+                            maxVelocityIndex = indexCounter;
+                            break;
+                        }
+                        else
+                        {
+                            shotAcceleratingCounter = 0;
+                        }
+
+                        indexCounter++;
+                    }
+
+                    shootVelocity = (/*velocities[maxAccelIndex-2] + */velocities[maxVelocityIndex - 1] /*+ velocities[maxVelocityIndex]*/);
+                    Debug.Log($"Ball released at: {shootVelocity}, index = {maxVelocityIndex}");
+                    GetComponent<XRDirectInteractor>().allowSelect = false;
+                    shoot = true;
+                }
+            }
         }
     }
 
@@ -55,7 +99,7 @@ public class ShootingTrigger : MonoBehaviour
     {
         Debug.Log("Start Tracking");
         trackingActive = true;
-        GetComponent<ControllerMetrics>().StartTracking(ref positions, ref velocities);
+        //GetComponent<ControllerMetrics>().StartTracking(ref positions, ref velocities);
         GetComponent<ControllerMetrics>().debugEnabled = true;
     }
 
@@ -70,20 +114,16 @@ public class ShootingTrigger : MonoBehaviour
         //{
         //    Debug.Log(velocity);
         //}
+        shoot = false;
+        releaseStarted = false;
+
         positions.Clear();
         velocities.Clear();
+        accelerationMags.Clear();
         trackingActive = false;
         GetComponent<ControllerMetrics>().StopTracking();
         GetComponent<ControllerMetrics>().debugEnabled = false;
+        GetComponent<XRDirectInteractor>().allowSelect = true;
         Debug.Log("Stop Tracking");
-    }
-
-    protected void Shoot()
-    {
-        shootVelocity = (velocities[velocities.Count-3] + velocities[velocities.Count - 2] + velocities[velocities.Count - 1]) / 3;
-        Debug.Log($"Ball released at: {shootVelocity}");
-        GetComponent<XRDirectInteractor>().allowSelect = false;
-        shoot = true;
-        StopTracking();
     }
 }

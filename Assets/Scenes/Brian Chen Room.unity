@@ -545,6 +545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootingTrigger: {fileID: 712900745}
   shootingZone: {fileID: 1325226600}
+  basketballGrabInteractable: {fileID: 256181620}
 --- !u!4 &337053077 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2257705481687827567, guid: d091eaa5483c6f84082ac222e0527a18,
@@ -3576,22 +3577,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab948ffa38a8c241a064241ac471a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionAction:
-    m_UseReference: 0
-    m_Action:
-      m_Name: Position
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 07d087ee-c7c2-46bc-9462-2ec0349c302a
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 0}
   currentPosition: {x: 0, y: 0, z: 0}
   currentRotation: {x: 0, y: 0, z: 0, w: 0}
   currentVelocity: {x: 0, y: 0, z: 0}
+  currentAngVelocity: {x: 0, y: 0, z: 0}
   currentVelSqrMagnitude: 0
+  currentAngVelSqrMagnitude: 0
   currentAcceleration: {x: 0, y: 0, z: 0}
   currentMagAcceleration: 0
   debugEnabled: 0
@@ -3608,6 +3599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootingZone: {fileID: 1325226600}
+  ballRb: {fileID: 256181621}
 --- !u!1 &732940324
 GameObject:
   m_ObjectHideFlags: 0
@@ -4294,7 +4286,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 0.99, z: 1.42}
-  m_Center: {x: 0, y: 0.6, z: 0.83}
+  m_Center: {x: 0, y: 0.55, z: 0.83}
 --- !u!1818360608 &1325226601
 PositionConstraint:
   m_ObjectHideFlags: 0

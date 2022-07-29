@@ -158,6 +158,7 @@ public class ControllerMetrics : MonoBehaviour
             $"Current Rotation: {currentRotation}; \n" +
             $"Current Velocity: {currentVelocity}; \n" +
             $"Last Velocity: {lastVelocity}; \n" +
+            $"Current Velocity Magnitude: {currentVelSqrMagnitude}; \n" +
             $"Current Angular Velocity: {currentAngVelocity}; \n" +
             $"Current Angular Velocity Magnitude: {currentAngVelSqrMagnitude}; \n" +
             $"Current Acceleration: {currentAcceleration}; \n" +
