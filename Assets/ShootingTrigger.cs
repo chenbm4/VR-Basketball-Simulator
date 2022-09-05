@@ -10,6 +10,8 @@ public class ShootingTrigger : MonoBehaviour
     public Rigidbody ballRb;
 
     private bool trackingActive;
+    private Vector3 startingPos;
+
     private List<Vector3> positions;
     private List<Vector3> velocities;
     private List<float> accelerationMags;
@@ -39,6 +41,7 @@ public class ShootingTrigger : MonoBehaviour
         if (shoot)
         {
             ballRb.AddForce(shootVelocity, ForceMode.VelocityChange);
+            //ballRb.AddForce(new Vector3(0, 2, 0), ForceMode.VelocityChange);
             shootVelocity *= 0;
             StopTracking();
         }
@@ -49,10 +52,17 @@ public class ShootingTrigger : MonoBehaviour
             //velocities.Add(metrics.currentVelocity);
             //accelerationMags.Add(metrics.currentMagAcceleration);
             
-            if (!releaseStarted && metrics.currentMagAcceleration > 500.0f)
+            if (!releaseStarted)
             {
-                releaseStarted = true;
-                Debug.Log("Release started.");
+                if (metrics.currentMagAcceleration > 50.0f)
+                {
+                    releaseStarted = true;
+                    Debug.Log("Release started.");
+                }
+                else
+                {
+                    startingPos = metrics.currentPosition;
+                }
             }
 
             if (releaseStarted)
@@ -63,33 +73,50 @@ public class ShootingTrigger : MonoBehaviour
 
                 if (metrics.currentVelSqrMagnitude < 5.0f)
                 {
-                    int maxVelocityIndex = 0;
-                    int indexCounter = 0;
-                    int shotAcceleratingCounter = 0;
+                    // measure distance from starting point
+                    float distFromStart = Vector3.Distance(startingPos, metrics.currentPosition);
 
-                    foreach (float acceleration in accelerationMags)
+                    if (distFromStart > 0.2f)
                     {
-                        if (acceleration > 0.0f)
+                        int maxVelocityIndex = 0;
+                        int indexCounter = 0;
+                        int shotAcceleratingCounter = 0;
+
+                        foreach (float acceleration in accelerationMags)
                         {
-                            shotAcceleratingCounter++;
-                        }
-                        else if (shotAcceleratingCounter >= 2)
-                        {
-                            maxVelocityIndex = indexCounter;
-                            break;
-                        }
-                        else
-                        {
-                            shotAcceleratingCounter = 0;
+                            if (acceleration > 0.0f)
+                            {
+                                shotAcceleratingCounter++;
+                                maxVelocityIndex = indexCounter;
+                            }
+                            else if (shotAcceleratingCounter >= 2)
+                            {
+                                maxVelocityIndex = indexCounter;
+                                break;
+                            }
+                            else
+                            {
+                                shotAcceleratingCounter = 0;
+                            }
+
+                            indexCounter++;
                         }
 
-                        indexCounter++;
+                        GetComponent<XRDirectInteractor>().allowSelect = false;
+                        shoot = true;
+                        shootVelocity = (velocities[maxVelocityIndex - 1] + velocities[maxVelocityIndex]) / 2;
+                        Debug.Log($"Ball released at: {shootVelocity}, index = {maxVelocityIndex}");
+                    } 
+                    else
+                    {
+                        startingPos = metrics.currentPosition;
+                        releaseStarted = false;
+                        positions.Clear();
+                        velocities.Clear();
+                        accelerationMags.Clear();
+
+                        Debug.Log($"Ball not far enough from starting point: {distFromStart}. Restart release.");
                     }
-
-                    shootVelocity = (/*velocities[maxAccelIndex-2] + */velocities[maxVelocityIndex - 1] /*+ velocities[maxVelocityIndex]*/);
-                    Debug.Log($"Ball released at: {shootVelocity}, index = {maxVelocityIndex}");
-                    GetComponent<XRDirectInteractor>().allowSelect = false;
-                    shoot = true;
                 }
             }
         }
