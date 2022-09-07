@@ -18,15 +18,18 @@ public class ShootingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (basketballGrabInteractable.isSelected)
+        {
+            shootingTrigger.StartTracking();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == shootingZone.name && basketballGrabInteractable.isSelected)
-        {
-            shootingTrigger.StartTracking();
-        }
+        //if (other.name == shootingZone.name && basketballGrabInteractable.isSelected)
+        //{
+        //    shootingTrigger.StartTracking();
+        //}
     }
 
     private void OnTriggerExit(Collider other)

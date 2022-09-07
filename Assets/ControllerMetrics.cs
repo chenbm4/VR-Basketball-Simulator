@@ -51,6 +51,8 @@ public class ControllerMetrics : MonoBehaviour
         //accelerationsList = null;
 
         trackingActive = false;
+
+        //Grapher.Init();
     }
 
     /// <summary>
@@ -121,6 +123,14 @@ public class ControllerMetrics : MonoBehaviour
                 //accelerationsList.Add(currentAcceleration);
             }
 
+            Grapher.Log(currentPosition.x, "Position X Graph");
+            Grapher.Log(currentPosition.y, "Position Y Graph");
+            Grapher.Log(currentPosition.z, "Position Z Graph");
+
+            Grapher.Log(currentVelocity.x, "Velocity X Graph");
+            Grapher.Log(currentVelocity.y, "Velocity Y Graph");
+            Grapher.Log(currentVelocity.z, "Velocity Z Graph");
+
             // if debug enabled, output data to debug
             if (debugEnabled)
             {
@@ -147,7 +157,13 @@ public class ControllerMetrics : MonoBehaviour
     public void StopTracking()
     {
         trackingActive = false;
+        //DebugGUI.RemoveGraph("positionXGraph");
     }
+
+    //public void GraphData()
+    //{
+    //    DebugGUI.Graph("PositionXGraph", currentPosition.x);
+    //}
 
     string OutputDebug()
     {

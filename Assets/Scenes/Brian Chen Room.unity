@@ -3600,6 +3600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootingZone: {fileID: 1325226600}
   ballRb: {fileID: 256181621}
+  headsetLoc: {fileID: 920921511}
 --- !u!1 &732940324
 GameObject:
   m_ObjectHideFlags: 0
@@ -4248,7 +4249,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1325226597}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 2.69, y: 2.2426, z: -3.66}
+  m_LocalPosition: {x: 2.38, y: 1.8, z: -3.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4285,7 +4286,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.99, z: 1.42}
+  m_Size: {x: 1.24, y: 1.17, z: 1.7}
   m_Center: {x: 0, y: 0.55, z: 0.83}
 --- !u!1818360608 &1325226601
 PositionConstraint:
@@ -4296,8 +4297,8 @@ PositionConstraint:
   m_GameObject: {fileID: 1325226597}
   m_Enabled: 1
   m_Weight: 1
-  m_TranslationAtRest: {x: 2.69, y: 2.2426, z: -3.66}
-  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_TranslationAtRest: {x: 2.38, y: 1.8, z: -3.66}
+  m_TranslationOffset: {x: -0.30999994, y: -0.4426, z: 0}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
